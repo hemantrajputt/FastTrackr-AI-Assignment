@@ -25,6 +25,9 @@
     "recharts": "^3.8.1",
     "uuid": "^14.0.0"
   },
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "devDependencies": {
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
