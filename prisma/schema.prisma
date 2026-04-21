@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Household {
+  id                  String   @id @default(uuid())
+  name                String   @unique
+  taxBracket          String?
+  liquidNetWorth      Float?
+  totalNetWorth       Float?
+  annualIncome        Float?
+  expenseRange        Float?
+  riskTolerance       String?
+  investmentObjective String?
+  additionalInfo      Json     @default("{}")
+
+  members             Member[]
+  financialAccounts   FinancialAccount[]
+  customEntities      CustomEntity[]
+  goalsAndPreferences GoalOrPreference[]
+  changelog           ChangelogEntry[]
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Member {
+  id             String   @id @default(uuid())
+  householdId    String
+  household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String?
+  memberType     String   @default("individual")
+  relationship   String?
+  dateOfBirth    DateTime?
+  ssnEncrypted   String?
+  phone          String?
+  email          String?
+  address        String?
+  occupation     String?
+  employer       String?
+  annualIncome   Float?
+  maritalStatus  String?
+  driversLicense String?
+  dlState        String?
+  dlIssueDate    DateTime?
+  dlExpiryDate   DateTime?
+  additionalInfo Json     @default("{}")
+
+  financialAccounts  FinancialAccount[]
+  bankDetails        BankDetail[]
+  customEntities     CustomEntity[]
+  goalsAndPreferences GoalOrPreference[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([householdId, firstName, lastName])
+}
+
+model FinancialAccount {
+  id                   String   @id @default(uuid())
+  householdId          String
+  household            Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  memberId             String?
+  member               Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  accountType          String
+  accountTypeDetail    String?
+  custodian            String?
+  accountValue         Float?
+  ownershipDist        String?
+  investmentObjective  String?
+  riskTolerance        String?
+  timeHorizon          String?
+  decisionMaking       String?
+  sourceOfFunds        String?
+  primaryUseOfFunds    String?
+  liquidityNeeds       String?
+  liquidityTimeHorizon String?
+  yearsExpBonds        Float?
+  yearsExpStocks       Float?
+  yearsExpAlternatives Float?
+  yearsExpVAs          Float?
+  yearsExpMutualFunds  Float?
+  yearsExpOptions      Float?
+  yearsExpPartnerships Float?
+  additionalInfo       Json     @default("{}")
+
+  beneficiaries        Beneficiary[]
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model BankDetail {
+  id            String   @id @default(uuid())
+  memberId      String
+  member        Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  bankName      String?
+  bankType      String?
+  accountNumber String?
+  routingNumber String?
+  additionalInfo Json    @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Beneficiary {
+  id           String           @id @default(uuid())
+  accountId    String
+  account      FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name         String
+  percentage   Float?
+  dateOfBirth  DateTime?
+  relationship String?
+  priority     Int              @default(1)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model CustomEntity {
+  id          String    @id @default(uuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  memberId    String?
+  member      Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  entityType  String
+  title       String
+  data        Json      @default("{}")
+  source      String?
+  sourceFile  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([entityType])
+  @@index([householdId])
+}
+
+model GoalOrPreference {
+  id          String    @id @default(uuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  memberId    String?
+  member      Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  category    String
+  description String
+  priority    String?
+  targetDate  DateTime?
+  source      String?
+  sourceFile  String?
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ChangelogEntry {
+  id          String    @id @default(uuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  sourceType  String
+  sourceFile  String?
+  changeType  String
+  entityTable String?
+  entityId    String?
+  fieldName   String?
+  oldValue    String?
+  newValue    String?
+  summary     String?
+  confidence  Float?
+  createdAt   DateTime  @default(now())
+}
