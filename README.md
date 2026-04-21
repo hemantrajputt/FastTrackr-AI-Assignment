@@ -176,15 +176,11 @@ All LLM calls (column mapping, transcription, extraction, SQL generation, answer
 
 2. **Member identity = (firstName, lastName) within a household** — two members in the same household with the same first and last name are treated as the same person.
 
-3. **Excel structure** — the spreadsheet has a single header row followed by data rows. Each row represents one member–account combination. Multiple rows can belong to the same household.
+3. **Excel structure** — the spreadsheet has a single header row followed by data rows. Each row represents one member–account combination. Multiple rows can belong to the same household, and Excel is used to create or update household data.
 
 4. **Audio conversations reference existing households** — the audio pipeline enriches data for households already in the database. If no matching household is found, audio extractions are skipped.
 
 5. **Read-only AI queries** — the AI Insights agent is restricted to `SELECT` statements only. All mutation keywords (`INSERT`, `UPDATE`, `DELETE`, `DROP`, etc.) are blocked at the validation layer.
-
-6. **Gemini availability** — the application requires a working Gemini API key. For Excel column mapping, a deterministic fallback exists, but audio transcription and AI Insights require the LLM.
-
-7. **Single-tenant** — the app is designed for a single advisor/user. There is no authentication or multi-tenancy.
 
 8. **Household income aggregation** — `annualIncome` on the `Household` model is the sum of individual `annualIncome` values from all members in that household, deduplicated at the member level.
 
