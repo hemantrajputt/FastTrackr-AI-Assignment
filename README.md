@@ -2,7 +2,7 @@
 
 A full-stack application that parses client data from Excel spreadsheets, transcribes and extracts actionable insights from advisor–client audio conversations, and provides an AI-powered natural language query interface over the structured data.
 
-> **Live deployment:** [[https://fasttrackr-production.up.railway.app](https://fasttrackr-ai-assignment-production.up.railway.app/)]
+> **Live deployment:** [[https://fasttrackr-ai-assignment-production.up.railway.app/](https://fasttrackr-ai-assignment-production.up.railway.app/)]
 
 ---
 
@@ -24,12 +24,11 @@ A full-stack application that parses client data from Excel spreadsheets, transc
 | **Language** | TypeScript 5 |
 | **Database** | PostgreSQL (Supabase-hosted) |
 | **ORM** | Prisma 7 with `@prisma/adapter-pg` (driver adapter) |
-| **AI / LLM** | Google Gemini (`gemini-3.1-pro-preview`) via `@google/generative-ai` |
+| **AI / LLM** | Google Gemini |
 | **Audio Transcription** | Gemini Multimodal (inline audio → transcript) |
 | **Excel Parsing** | ExcelJS |
 | **Charts** | Recharts |
 | **Animations** | Framer Motion |
-| **Observability** | LangSmith tracing (all LLM calls traced) |
 | **Deployment** | Railway (Nixpacks builder) |
 
 ---
@@ -65,11 +64,6 @@ DIRECT_URL="postgresql://<user>:<password>@<host>:5432/<db>"
 # Google Gemini API Key
 GEMINI_API_KEY="your-gemini-api-key"
 
-# LangSmith Tracing (optional)
-LANGSMITH_TRACING=true
-LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-LANGSMITH_API_KEY=your-langsmith-api-key
-LANGSMITH_PROJECT=Fasttrackr
 ```
 
 ### 3. Push the database schema
@@ -164,10 +158,6 @@ The `/insights` page displays pre-computed aggregate visualizations via Recharts
 - Members and accounts per household
 - Investment objective distribution
 
-### 6. Observability
-
-All LLM calls (column mapping, transcription, extraction, SQL generation, answer synthesis) are wrapped with LangSmith tracing via `traceable()`, providing full observability into latencies, token usage, and prompt/response pairs.
-
 ---
 
 ## Assumptions
@@ -210,7 +200,7 @@ fasttrackr/
 │   └── lib/
 │       ├── db.ts                 # Prisma client singleton
 │       ├── ai/
-│       │   ├── gemini.ts         # Gemini client + LangSmith tracing
+│       │   ├── gemini.ts         # Gemini
 │       │   └── agent.ts          # Agentic SQL generation loop
 │       ├── excel/
 │       │   ├── parser.ts         # Excel → structured data
