@@ -2,7 +2,7 @@
 
 A full-stack application that parses client data from Excel spreadsheets, transcribes and extracts actionable insights from advisor–client audio conversations, and provides an AI-powered natural language query interface over the structured data.
 
-> **Live deployment:** [https://fasttrackr-production.up.railway.app](https://fasttrackr-production.up.railway.app)
+> **Live deployment:** [[https://fasttrackr-production.up.railway.app](https://fasttrackr-ai-assignment-production.up.railway.app/)]
 
 ---
 
